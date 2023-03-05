@@ -1,0 +1,21 @@
+.create {
+  display: flex;
+  justify-content: center;
+  padding: 10px 0;
+}
+
+.create form {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+
+  flex-basis: 30%;
+  background-color: white;
+  border-radius: 6px;
+  padding: 10px;
+}
+
+input[type="file"] {
+  visibility: hidden;
+  height: 0;
+}

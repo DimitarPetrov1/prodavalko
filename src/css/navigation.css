@@ -1,0 +1,21 @@
+.nav {
+  height: 50px;
+  background: darkblue;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.nav li {
+  padding: 10px;
+  text-transform: capitalize;
+}
+
+.nav a {
+  color: white;
+  transition: all 0.5s;
+}
+
+.nav a:hover {
+  color: lightslategray;
+}

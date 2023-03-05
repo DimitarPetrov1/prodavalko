@@ -1,0 +1,12 @@
+.catalog {
+  display: flex;
+  justify-content: center;
+  padding: 10px 0;
+}
+
+.catalog-items {
+  flex-basis: 50%;
+  background-color: white;
+  border-radius: 6px;
+  padding: 10px;
+}

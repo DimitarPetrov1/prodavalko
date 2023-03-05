@@ -1,0 +1,22 @@
+.catalog-item-box {
+  display: flex;
+  margin-bottom: 10px;
+}
+.catalog-item-description-box {
+  height: 200px;
+  border: 1px solid lightgray;
+  border-left: 0;
+}
+
+.catalog-item-description-box p {
+  padding: 10px;
+  height: 150px;
+  overflow: hidden;
+}
+
+.catalog-item-buttons-box {
+  height: 50px;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}

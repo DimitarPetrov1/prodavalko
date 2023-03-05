@@ -1,0 +1,38 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Color scheme*/
+.success {
+  background-color: greenyellow;
+}
+
+.normal {
+  background-color: lightgray;
+}
+
+.danger {
+  background-color: red;
+  color: white;
+}
+
+ul {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.button {
+  padding: 6px 8px;
+  border-radius: 6px;
+  transition: all 0.5s;
+}
+
+.button:hover {
+  opacity: 0.7;
+}

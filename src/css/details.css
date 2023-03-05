@@ -1,0 +1,27 @@
+.details {
+  display: flex;
+  justify-content: center;
+  padding: 10px 0;
+}
+
+.details img {
+  padding-bottom: 10px;
+}
+
+.details-container {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+
+  flex-basis: 50%;
+  background-color: white;
+  border-radius: 6px;
+  padding: 10px;
+}
+
+.details-container h2,
+.details-container p {
+  margin-bottom: 10px;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
