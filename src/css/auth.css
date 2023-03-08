@@ -17,5 +17,6 @@ form[method="POST"] {
 
 form[method="POST"] label,
 form[method="POST"] input {
-  padding: 5px 0;
+  margin: 5px 0;
+  padding: 5px;
 }
