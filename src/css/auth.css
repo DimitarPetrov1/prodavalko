@@ -1,0 +1,21 @@
+.auth-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 50px);
+}
+
+form[method="POST"] {
+  background-color: white;
+  flex-basis: 250px;
+  height: 500px;
+  padding: 50px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+form[method="POST"] label,
+form[method="POST"] input {
+  padding: 5px 0;
+}
