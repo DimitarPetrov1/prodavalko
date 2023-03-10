@@ -26,12 +26,19 @@ export default function Catalog() {
   return (
     <div className="catalog">
       <div className="catalog-items">
-        {/* <p>No items available</p> */}
-        {offers.map((offer, index) => {
-          return (
-            <CatalogItemBox key={index} id={offer.id} details={offer.details} />
-          );
-        })}
+        {offers.length === 0 ? (
+          <p>No items available</p>
+        ) : (
+          offers.map((offer, index) => {
+            return (
+              <CatalogItemBox
+                key={index}
+                id={offer.id}
+                details={offer.details}
+              />
+            );
+          })
+        )}
       </div>
     </div>
   );

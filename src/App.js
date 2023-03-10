@@ -5,6 +5,7 @@ import Navigation from "./pages/Navigation";
 import Catalog from "./pages/Catalog";
 import Details from "./pages/Details";
 import Create from "./pages/Create";
+import Edit from "./pages/Edit";
 import Logout from "./pages/Logout";
 
 import "./css/app.css";
@@ -12,6 +13,7 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import { auth } from "./firebase/config";
 import { onAuthStateChanged } from "firebase/auth";
+import Profile from "./pages/Profile";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -37,8 +39,10 @@ function App() {
           <Route path="/catalog" element={<Catalog />} />
           <Route path="/catalog/:offerID" element={<Details />} />
           <Route path="/create" element={<Create />} />
+          <Route path="/edit/:offerID" element={<Edit />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/profile" element={<Profile user={user} />} />
           <Route path="/logout" element={<Logout />} />
         </Routes>
       </main>

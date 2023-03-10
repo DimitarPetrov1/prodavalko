@@ -1,38 +1,32 @@
 import { useState } from "react";
 import { db } from "../firebase/config";
-import { collection, doc, setDoc } from "firebase/firestore";
-import { auth } from "../firebase/config";
+import { doc, updateDoc } from "firebase/firestore";
+import { useParams } from "react-router-dom";
 
 import "../css/create.css";
 
 export default function Create() {
   const [selectedImage, setSelectedImage] = useState("No image selected");
 
-  let formData = {};
+  const { offerID } = useParams();
 
-  const submit = (e) => {
-    // first get the form data and update the state
+  // to use auto id use doc
+  const editOffer = async (e) => {
     const form = e.target.form;
 
-    formData = {
-      owner: auth.currentUser.uid.toString(),
+    const editDocumentRef = doc(db, "offers", offerID);
+
+    await updateDoc(editDocumentRef, {
       name: form.name.value,
       price: form.price.value,
       description: form.description.value,
-    };
-
-    // to use auto id use doc
-    const createOffer = async () => {
-      const docRef = doc(collection(db, "offers"));
-      await setDoc(docRef, formData);
-    };
-    createOffer();
+    });
   };
 
   return (
     <div className="create">
       <form method="POST" onSubmit={(e) => e.preventDefault()}>
-        <label>Offer name</label>
+        <label>Edit Offer name</label>
         <input type="text" name="name" placeholder="Offer name" />
 
         <label htmlFor="uploadImage">Add image</label>
@@ -50,7 +44,7 @@ export default function Create() {
         <label>Offer description</label>
         <input type="text" name="description" />
 
-        <input type="submit" value="Create" onClick={submit} />
+        <input type="submit" value="Edit" onClick={editOffer} />
       </form>
     </div>
   );

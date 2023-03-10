@@ -1,9 +1,7 @@
 import { useState } from "react";
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { db } from "../firebase/config";
+import { doc, setDoc } from "firebase/firestore";
 import "../css/auth.css";
 
 export default function Register() {
@@ -18,15 +16,16 @@ export default function Register() {
       e.target.email.value,
       e.target.password.value
     )
-      .then((userCredential) => {
-        // Signed in
-        // const user = userCredential.user;
-        // ...
+      .then(async (userCredential) => {
+        await setDoc(doc(db, "userData", userCredential.user.uid), {
+          username: e.target.username.value,
+          phoneNumber: e.target.phoneNumber.value,
+          avatar: "",
+        });
       })
       .catch((error) => {
-        // const errorCode = error.code;
-        // const errorMessage = error.message;
-        // ..
+        const errorMessage = error.message;
+        alert(errorMessage);
       });
   };
 
@@ -34,7 +33,13 @@ export default function Register() {
     <div className="auth-page">
       <form method="POST" onSubmit={Submit}>
         <h2>Register</h2>
+        <input type="text" name="username" placeholder="Username" />
         <input type="email" name="email" placeholder="Your Email" />
+        <input
+          type="number"
+          name="phoneNumber"
+          placeholder="Your phone number"
+        />
         <input
           type={hiddenPassword ? "password" : "text"}
           name="password"

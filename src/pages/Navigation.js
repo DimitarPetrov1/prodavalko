@@ -19,6 +19,9 @@ export default function Navigation({ user }) {
             <li>
               <NavLink to="/logout">logout</NavLink>
             </li>
+            <li>
+              <NavLink to="/profile">profile</NavLink>
+            </li>
           </>
         ) : (
           <>
