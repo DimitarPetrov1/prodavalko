@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { db } from "../firebase/config";
 import { auth } from "../firebase/config";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 
 import defaultImage from "../img/profile.jpg";
 import UploadImage from "../partials/UploadImage";
@@ -12,6 +12,8 @@ import "../css/profile.css";
 
 export default function Profile() {
   const [userData, setUserData] = useState();
+  const [editOpen, setOpenEdit] = useState(false);
+  const [newPhone, setNewPhone] = useState();
 
   const getUser = async () => {
     const userRef = doc(db, "userData", auth.currentUser.uid);
@@ -25,6 +27,21 @@ export default function Profile() {
   };
   getUser();
 
+  const editNumber = (e) => {
+    e.preventDefault();
+
+    const updateNumber = async () => {
+      const numberRef = doc(db, "userData", auth.currentUser.uid);
+      await updateDoc(numberRef, {
+        phoneNumber: newPhone,
+      });
+    };
+    updateNumber();
+    setNewPhone();
+    setOpenEdit(false);
+    getUser();
+  };
+
   return (
     <div className="profile">
       {userData ? (
@@ -36,10 +53,28 @@ export default function Profile() {
             <UploadImage />
           </div>
 
-          <div className="my-info">
+          <form method="POST" className="my-info">
             <p>Contact number: {userData.phoneNumber}</p>
-            <button>Edit</button>
-          </div>
+            <div style={{ visibility: editOpen ? "visible" : "hidden" }}>
+              <input
+                type="number"
+                name="editNumber"
+                value={newPhone}
+                onChange={(e) => setNewPhone(e.target.value)}
+              />
+              <button onClick={editNumber}>Confirm</button>
+            </div>
+
+            <button
+              className={editOpen ? "button danger" : "button success"}
+              onClick={(e) => {
+                e.preventDefault();
+                setOpenEdit(!editOpen);
+              }}
+            >
+              Edit
+            </button>
+          </form>
           {/*  */}
           <p>Likes:</p>
           <div className="my-likes-container">
