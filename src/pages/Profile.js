@@ -1,19 +1,43 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
-import { db } from "../firebase/config";
-import { auth } from "../firebase/config";
+import { db, auth, storage } from "../firebase/config";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 
 import defaultImage from "../img/profile.jpg";
-import UploadImage from "../partials/UploadImage";
 import Favourite from "../partials/Favourite";
 
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+
 import "../css/profile.css";
+import "../css/partials/uploadimage.css";
 
 export default function Profile() {
   const [userData, setUserData] = useState();
   const [editOpen, setOpenEdit] = useState(false);
   const [newPhone, setNewPhone] = useState();
+  const [avatarUrl, setAvatarUrl] = useState("");
+
+  const [selectedImage, setSelectedImage] = useState("No image selected");
+
+  const [imageUplaod, setImageUpload] = useState(null);
+
+  const uploadImage = () => {
+    if (imageUplaod == null) return;
+
+    const imageRef = ref(storage, `avatars/${auth.currentUser.uid}`);
+    uploadBytes(imageRef, imageUplaod).then(() => {
+      alert("image uploaded");
+    });
+  };
+
+  useEffect(() => {
+    const avatarRef = ref(storage, `avatars/${auth.currentUser.uid}`);
+    if (avatarRef !== null || avatarRef !== undefined) {
+      getDownloadURL(avatarRef).then((res) => {
+        setAvatarUrl(res);
+      });
+    }
+  }, []);
 
   const getUser = async () => {
     const userRef = doc(db, "userData", auth.currentUser.uid);
@@ -49,8 +73,22 @@ export default function Profile() {
           <div className="profile-picture-container">
             <p>{userData.username}</p>
             {/* If not image set, use default */}
-            <img src={defaultImage} alt="" />
-            <UploadImage />
+            <img src={avatarUrl} alt="" />
+
+            <div className="upload-image-container">
+              <label htmlFor="uploadImage">Add image</label>
+              <input
+                type="file"
+                name="image"
+                id="uploadImage"
+                onChange={(e) => {
+                  setSelectedImage(e.target.value.match(/[^\\/]*$/));
+                  setImageUpload(e.target.files[0]);
+                }}
+              />
+              <button onClick={uploadImage}>Add photo</button>
+              {selectedImage}
+            </div>
           </div>
 
           <form method="POST" className="my-info">
