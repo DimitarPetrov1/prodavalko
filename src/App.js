@@ -35,7 +35,7 @@ function App() {
       </header>
       <main>
         <Routes>
-          <Route path="/" element={<Home user={user} />} />
+          <Route path="/" element={<Home />} />
           <Route path="/catalog" element={<Catalog />} />
           <Route path="/catalog/:offerID" element={<Details />} />
           <Route path="/create" element={<Create />} />
@@ -46,7 +46,7 @@ function App() {
           <Route path="/logout" element={<Logout />} />
         </Routes>
       </main>
-      {/* <footer>Just a footer</footer> */}
+      <footer>Just a footer</footer>
     </div>
   );
 }

@@ -1,7 +1,11 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { db } from "../firebase/config";
 import { doc, setDoc } from "firebase/firestore";
+import SignUpSVG from "../img/undraw_sign__up_nm4k.svg";
+import HiddenIcon from "../img/eye-off.svg";
+import VisibleIcon from "../img/eye.svg";
 import "../css/auth.css";
 
 export default function Register() {
@@ -31,8 +35,8 @@ export default function Register() {
 
   return (
     <div className="auth-page">
+      <h1>Sign up</h1>
       <form method="POST" onSubmit={Submit}>
-        <h2>Register</h2>
         <input type="text" name="username" placeholder="Username" />
         <input type="email" name="email" placeholder="Your Email" />
         <input
@@ -40,31 +44,53 @@ export default function Register() {
           name="phoneNumber"
           placeholder="Your phone number"
         />
-        <input
-          type={hiddenPassword ? "password" : "text"}
-          name="password"
-          placeholder="Your Password"
-        />
+        <div className="icon-holder">
+          <input
+            type={hiddenPassword ? "password" : "text"}
+            name="password"
+            placeholder="Your Password"
+          />
+
+          {hiddenPassword ? (
+            <img
+              src={HiddenIcon}
+              alt=""
+              className="eye-icon"
+              onClick={(e) => {
+                e.preventDefault();
+                setHiddenPassword(!hiddenPassword);
+              }}
+            />
+          ) : (
+            <img
+              src={VisibleIcon}
+              alt=""
+              className="eye-icon"
+              onClick={(e) => {
+                e.preventDefault();
+                setHiddenPassword(!hiddenPassword);
+              }}
+            />
+          )}
+        </div>
         <input
           type={hiddenPassword ? "password" : "text"}
           name="repeatPassword"
           placeholder="Your Password"
         />
 
-        <button
-          className="button normal"
-          onClick={(e) => {
-            e.preventDefault();
-            setHiddenPassword(!hiddenPassword);
-          }}
-        >
-          See
+        <button className="button success" type="submit">
+          Sign up
         </button>
 
-        <button className="button danger" type="submit">
-          Send
-        </button>
+        <img src={SignUpSVG} alt="" />
       </form>
+      <p>
+        Already have an account? <Link to="/login">Sign in</Link>.
+      </p>
+      <p>
+        Or just browse our offers <Link to="/catalog">here</Link>.
+      </p>
     </div>
   );
 }

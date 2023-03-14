@@ -31,8 +31,9 @@ a {
   padding: 6px 8px;
   border-radius: 6px;
   transition: all 0.5s;
+  cursor: pointer;
 }
 
 .button:hover {
-  opacity: 0.7;
+  opacity: 0.5;
 }

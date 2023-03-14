@@ -1,21 +1,19 @@
-import { NavLink } from "react-router-dom";
+import { auth } from "../firebase/config";
+import Login from "./Login";
+import WelcomeIcon from "../img/undraw_welcome_re_h3d9.svg";
 
 import "../css/home.css";
 
-export default function Home({ user }) {
+export default function Home() {
   return (
     <div className="home">
-      <h2>
-        {user
-          ? `Hello ${user.email}, we're glad you're back`
-          : "Welcome to the best place to sell and buy your stuff!"}
-      </h2>
+      {auth.currentUser && auth.currentUser.uid ? (
+        <img src={WelcomeIcon} alt=""></img>
+      ) : (
+        <Login />
+      )}
 
-      <p>
-        <NavLink className="home-link" to="/catalog">
-          See our latest items here!
-        </NavLink>
-      </p>
+      <p></p>
     </div>
   );
 }
