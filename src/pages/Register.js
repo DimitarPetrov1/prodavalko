@@ -34,7 +34,7 @@ export default function Register() {
   };
 
   return (
-    <div className="auth-page">
+    <div className="page auth-page">
       <h1>Sign up</h1>
       <form method="POST" onSubmit={Submit}>
         <input type="text" name="username" placeholder="Username" />

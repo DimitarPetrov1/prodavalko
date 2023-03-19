@@ -10,7 +10,7 @@
 }
 
 .normal {
-  background-color: lightgray;
+  background-color: white;
 }
 
 .danger {
@@ -36,4 +36,12 @@ a {
 
 .button:hover {
   opacity: 0.5;
+}
+
+.page {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  padding: 10px 0;
+  background-color: white;
 }

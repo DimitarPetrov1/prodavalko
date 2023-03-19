@@ -20,7 +20,7 @@ const Login = () => {
   };
 
   return (
-    <div className="auth-page">
+    <div className="page auth-page">
       <h1>Sign in</h1>
       <form method="POST" onSubmit={Submit}>
         <input type="email" name="email" placeholder="Your email" />

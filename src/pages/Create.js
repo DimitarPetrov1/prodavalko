@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { db } from "../firebase/config";
 import { collection, doc, setDoc } from "firebase/firestore";
 import { auth } from "../firebase/config";
@@ -6,12 +6,16 @@ import { auth } from "../firebase/config";
 import { storage } from "../firebase/config";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
+import ImageIcon from "../img/image.svg";
+import CreateSVG from "../img/undraw_typewriter_re_u9i2.svg";
+
 import "../css/create.css";
-import "../css/partials/uploadimage.css";
 
 export default function Create() {
-  const [imageUplaod, setImageUpload] = useState(null);
-  const [selectedImage, setSelectedImage] = useState("No image selected");
+  const [selectedImageName, setSelectedImageName] =
+    useState("No image selected");
+
+  const [imageUplaodRef, setImageUploadRef] = useState(null);
 
   const [imageUrl, setImageUrl] = useState(null);
 
@@ -24,8 +28,8 @@ export default function Create() {
   // image ref + using the auto id for the offer as a image name
   const imageRef = ref(storage, `offerImages/${offerID}`);
 
-  const imageUpload = async () => {
-    uploadBytes(imageRef, imageUplaod)
+  const uploadImage = async () => {
+    uploadBytes(imageRef, imageUplaodRef)
       .then(() => {
         getDownloadURL(imageRef)
           .then((url) => {
@@ -34,6 +38,7 @@ export default function Create() {
           .catch((err) => console.log(err));
       })
       .catch((err) => console.log(err));
+    setImageUploadRef(null);
   };
 
   const submit = async (e) => {
@@ -55,35 +60,55 @@ export default function Create() {
   };
 
   return (
-    <div className="create">
+    <div className="page create">
+      <h1>Create offer</h1>
       <form method="POST" onSubmit={(e) => e.preventDefault()}>
-        <label>Offer name</label>
         <input type="text" name="name" placeholder="Offer name" />
+        <input type="text" name="price" placeholder="Offer price" />
+        <textarea
+          name="description"
+          placeholder="Describe your offer"
+        ></textarea>
 
         <div className="upload-image-container">
-          <label htmlFor="uploadImage">Add image</label>
+          <label className="select-text-wrap" htmlFor="uploadImage">
+            {selectedImageName}
+            <img src={ImageIcon} alt="" />
+          </label>
           <input
             type="file"
             name="image"
             id="uploadImage"
             onChange={(e) => {
-              setSelectedImage(e.target.value.match(/[^\\/]*$/));
-              setImageUpload(e.target.files[0]);
+              setSelectedImageName(e.target.value.match(/[^\\/]*$/));
+              setImageUploadRef(e.target.files[0]);
             }}
           />
-          {selectedImage}
-          <img src={imageUrl} alt="" />
-          <button onClick={imageUpload}>Confirm</button>
+          {imageRef ? (
+            <>
+              <img src={imageUrl} alt="" />
+              {imageUplaodRef ? (
+                <button className="button normal" onClick={uploadImage}>
+                  Confirm
+                </button>
+              ) : (
+                ""
+              )}
+            </>
+          ) : (
+            ""
+          )}
         </div>
 
-        <label>Offer price</label>
-        <input type="number" name="price" />
-
-        <label>Offer description</label>
-        <input type="text" name="description" />
-
-        <input type="submit" value="Create" onClick={submit} />
+        <button
+          className="button success"
+          onClick={submit}
+          disabled={!imageUrl}
+        >
+          {imageUrl ? "Create offer" : "Select your image"}
+        </button>
       </form>
+      <img src={CreateSVG} alt="" className="create-bg-img" />
     </div>
   );
 }
