@@ -33,8 +33,8 @@ export default function Profile() {
   useEffect(() => {
     const avatarRef = ref(storage, `avatars/${auth.currentUser.uid}`);
     if (avatarRef !== null || avatarRef !== undefined) {
-      getDownloadURL(avatarRef).then((res) => {
-        setAvatarUrl(res);
+      getDownloadURL(avatarRef).then((url) => {
+        setAvatarUrl(url);
       });
     }
   }, []);

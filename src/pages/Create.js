@@ -1,53 +1,57 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { db } from "../firebase/config";
 import { collection, doc, setDoc } from "firebase/firestore";
 import { auth } from "../firebase/config";
 
 import { storage } from "../firebase/config";
-import { ref, uploadBytes } from "firebase/storage";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 import "../css/create.css";
 import "../css/partials/uploadimage.css";
 
 export default function Create() {
   const [imageUplaod, setImageUpload] = useState(null);
-
   const [selectedImage, setSelectedImage] = useState("No image selected");
+
+  const [imageUrl, setImageUrl] = useState(null);
 
   let formData = {};
 
-  const submit = (e) => {
-    let offerID = "";
-    // to use auto id use doc
-    const docRef = doc(collection(db, "offers"));
-    offerID = docRef.id;
-    // image ref
-    const imageRef = ref(storage, `offerImages/${offerID}`);
+  // to use auto id use doc
+  const docRef = doc(collection(db, "offers"));
+  const offerID = docRef.id;
 
+  // image ref + using the auto id for the offer as a image name
+  const imageRef = ref(storage, `offerImages/${offerID}`);
+
+  const imageUpload = async () => {
+    uploadBytes(imageRef, imageUplaod)
+      .then(() => {
+        getDownloadURL(imageRef)
+          .then((url) => {
+            setImageUrl(url);
+          })
+          .catch((err) => console.log(err));
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const submit = async (e) => {
     //  get the form data and update the state
     const form = e.target.form;
 
     formData = {
       id: offerID,
       owner: auth.currentUser.uid.toString(),
+      image: imageUrl,
       name: form.name.value,
       price: form.price.value,
       description: form.description.value,
     };
 
-    const createOffer = async () => {
-      await setDoc(docRef, formData);
+    await setDoc(docRef, formData);
 
-      const uploadImage = async () => {
-        if (imageUplaod == null) return;
-        uploadBytes(imageRef, imageUplaod).then(() => {
-          alert("Offer created");
-        });
-      };
-      uploadImage();
-    };
-
-    createOffer();
+    alert("Offer created");
   };
 
   return (
@@ -68,6 +72,8 @@ export default function Create() {
             }}
           />
           {selectedImage}
+          <img src={imageUrl} alt="" />
+          <button onClick={imageUpload}>Confirm</button>
         </div>
 
         <label>Offer price</label>

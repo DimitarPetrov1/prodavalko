@@ -2,6 +2,11 @@
   display: flex;
   margin-bottom: 10px;
 }
+
+.catalog-item-box img {
+  width: 200px;
+}
+
 .catalog-item-description-box {
   height: 200px;
   border: 1px solid lightgray;
