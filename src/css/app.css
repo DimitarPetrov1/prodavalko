@@ -45,3 +45,18 @@ a {
   padding: 10px 0;
   background-color: white;
 }
+
+.separator {
+  border-bottom: 1px solid gray;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+.svg-button {
+  transition: all 0.5s;
+  cursor: pointer;
+}
+
+.svg-button:hover {
+  opacity: 0.5;
+}

@@ -4,6 +4,10 @@ import { doc, getDoc, deleteDoc } from "firebase/firestore";
 import { useParams, NavLink } from "react-router-dom";
 import { auth } from "../firebase/config";
 
+import HeartSVG from "../img/heart.svg";
+import DeleteSVG from "../img/trash-2.svg";
+import EditSVG from "../img/edit.svg";
+
 import "../css/details.css";
 
 export default function Details() {
@@ -46,23 +50,41 @@ export default function Details() {
   return (
     <div className="details">
       {offer && offerDetails ? (
-        <div className="details-container">
-          <p>Offer author: {offerDetails.username}</p>
-          <p>Phone number: {offerDetails.phoneNumber}</p>
-          <p>{offer.name}</p>
-          <img src={offer.image} alt="" />
-          <p>Price: {offer.price}</p>
-          <p>Description:</p>
-          <p>{offer.description}</p>
-          {/* <p>Contact number: {offer.contactNumber}</p> */}
-          {/* todo */}
-          {auth.currentUser && auth.currentUser.uid === offer.owner ? (
-            <>
-              <button onClick={onDelete}>delete</button>
-              <NavLink to={`/edit/${offerID}`}>edit</NavLink>
-            </>
-          ) : null}
-        </div>
+        <>
+          <div className="details-container">
+            <img src={offer.image} alt="" />
+            <div className="separator"></div>
+            <p>{offer.description}</p>
+          </div>
+          <div className="sidebar">
+            <div className="sidebar-title">
+              <p>{offer.name}</p>
+              {auth.currentUser &&
+              auth.currentUser.uid === offer.owner ? null : (
+                <img className="svg-button" src={HeartSVG} alt="" />
+              )}
+            </div>
+            <p className="sidebar-price">Price: {offer.price}$</p>
+
+            <p>Offer by: {offerDetails.username}</p>
+            <p>Contact number: {offerDetails.phoneNumber}</p>
+
+            {/* todo */}
+            {auth.currentUser && auth.currentUser.uid === offer.owner ? (
+              <div className="sidebar-controls">
+                <img
+                  className="svg-button"
+                  src={DeleteSVG}
+                  alt=""
+                  onClick={onDelete}
+                />
+                <NavLink to={`/edit/${offerID}`}>
+                  <img className="svg-button" src={EditSVG} alt="" />
+                </NavLink>
+              </div>
+            ) : null}
+          </div>
+        </>
       ) : null}
     </div>
   );

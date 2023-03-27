@@ -1,27 +1,27 @@
 .catalog-item-box {
   display: flex;
   margin-bottom: 10px;
+  overflow: hidden;
 }
 
 .catalog-item-box img {
-  width: 200px;
+  width: 300px;
+  object-fit: cover;
 }
 
 .catalog-item-description-box {
   height: 200px;
   border: 1px solid lightgray;
   border-left: 0;
+  width: 100%;
 }
 
 .catalog-item-description-box p {
-  padding: 10px;
+  padding: 5px 10px;
   max-height: 150px;
   overflow: hidden;
 }
 
-.catalog-item-buttons-box {
-  height: 50px;
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
+.catalog-item-box-description {
+  font-size: 0.7rem;
 }
