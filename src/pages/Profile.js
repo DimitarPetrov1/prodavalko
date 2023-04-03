@@ -8,6 +8,9 @@ import Favourite from "../partials/Favourite";
 
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
+import EditSVG from "../img/edit.svg";
+import CheckSVG from "../img/check.svg";
+
 import "../css/profile.css";
 import "../css/partials/uploadimage.css";
 
@@ -17,18 +20,9 @@ export default function Profile() {
   const [newPhone, setNewPhone] = useState();
   const [avatarUrl, setAvatarUrl] = useState("");
 
-  const [selectedImage, setSelectedImage] = useState("No image selected");
+  const [selectedImage, setSelectedImage] = useState(null);
 
   const [imageUplaod, setImageUpload] = useState(null);
-
-  const uploadImage = () => {
-    if (imageUplaod == null) return;
-
-    const imageRef = ref(storage, `avatars/${auth.currentUser.uid}`);
-    uploadBytes(imageRef, imageUplaod).then(() => {
-      alert("image uploaded");
-    });
-  };
 
   useEffect(() => {
     const avatarRef = ref(storage, `avatars/${auth.currentUser.uid}`);
@@ -38,6 +32,16 @@ export default function Profile() {
       });
     }
   }, []);
+
+  const uploadImage = () => {
+    if (imageUplaod == null) return;
+
+    const imageRef = ref(storage, `avatars/${auth.currentUser.uid}`);
+    uploadBytes(imageRef, imageUplaod).then(() => {
+      alert("image uploaded");
+    });
+    setImageUpload(null);
+  };
 
   const getUser = async () => {
     const userRef = doc(db, "userData", auth.currentUser.uid);
@@ -61,22 +65,30 @@ export default function Profile() {
       });
     };
     updateNumber();
-    setNewPhone();
     setOpenEdit(false);
+    setNewPhone();
     getUser();
   };
 
   return (
     <div className="profile">
+      <h1>User Profile</h1>
       {userData ? (
         <>
           <div className="profile-picture-container">
-            <p>{userData.username}</p>
             {/* If not image set, use default */}
-            <img src={avatarUrl} alt="" />
+            <img
+              src={avatarUrl ? avatarUrl : defaultImage}
+              alt=""
+              className="avatar-pic"
+            />
+            <label style={{ marginBottom: 10 }} htmlFor="uploadImage">
+              <img src={EditSVG} alt="" className="svg-button" />
+            </label>
+
+            <h3>{userData.username}</h3>
 
             <div className="upload-image-container">
-              <label htmlFor="uploadImage">Add image</label>
               <input
                 type="file"
                 name="image"
@@ -86,32 +98,45 @@ export default function Profile() {
                   setImageUpload(e.target.files[0]);
                 }}
               />
-              <button onClick={uploadImage}>Add photo</button>
-              {selectedImage}
+
+              {imageUplaod ? (
+                <>
+                  <button onClick={uploadImage}>Add photo</button>
+                  {selectedImage}
+                </>
+              ) : null}
             </div>
           </div>
 
-          <form method="POST" className="my-info">
-            <p>Contact number: {userData.phoneNumber}</p>
-            <div style={{ visibility: editOpen ? "visible" : "hidden" }}>
+          <form method="POST">
+            <div className="phone-holder">
+              <p>Contact number: {userData.phoneNumber}</p>
+
+              <img
+                src={EditSVG}
+                alt=""
+                className="svg-button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setOpenEdit(!editOpen);
+                }}
+              />
+            </div>
+
+            <div className={editOpen ? "edit-phone-visible" : "edit-phone"}>
               <input
                 type="number"
                 name="editNumber"
                 value={newPhone}
                 onChange={(e) => setNewPhone(e.target.value)}
               />
-              <button onClick={editNumber}>Confirm</button>
+              <img
+                className="svg-button"
+                src={CheckSVG}
+                alt=""
+                onClick={editNumber}
+              />
             </div>
-
-            <button
-              className={editOpen ? "button danger" : "button success"}
-              onClick={(e) => {
-                e.preventDefault();
-                setOpenEdit(!editOpen);
-              }}
-            >
-              Edit
-            </button>
           </form>
           {/*  */}
           <p>Likes:</p>
@@ -121,9 +146,7 @@ export default function Profile() {
             <Favourite />
           </div>
         </>
-      ) : (
-        ""
-      )}
+      ) : null}
     </div>
   );
 }

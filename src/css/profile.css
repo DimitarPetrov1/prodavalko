@@ -6,21 +6,46 @@
   background-color: white;
 }
 
+.profile h1,
+.avatar-pic,
+.profile h3,
+.profile p {
+  margin-bottom: 10px;
+}
+
 .profile-picture-container {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.profile-picture-container img {
-  height: 200px;
-  width: 200px;
+.avatar-pic {
+  height: 250px;
+  width: 250px;
   border-radius: 50%;
   object-fit: cover;
 }
 
-.my-info {
-  width: 50%;
+.phone-holder {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+}
+
+.phone-holder p {
+  margin-right: 10px;
+}
+
+.edit-phone {
+  display: none;
+}
+
+.edit-phone-visible {
+  display: flex;
+}
+
+.edit-phone-visible input {
+  margin-right: 10px;
 }
 
 .my-likes-container {

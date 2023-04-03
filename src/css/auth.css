@@ -3,7 +3,7 @@
   padding: 25px;
 }
 
-form[method="POST"] {
+.auth-page form[method="POST"] {
   background-color: white;
   flex-basis: 250px;
   display: flex;

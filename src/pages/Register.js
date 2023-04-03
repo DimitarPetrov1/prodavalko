@@ -26,7 +26,6 @@ export default function Register() {
         await setDoc(doc(db, "userData", userCredential.user.uid), {
           username: e.target.username.value,
           phoneNumber: e.target.phoneNumber.value,
-          avatar: "",
         });
       })
       .then(navigate("/"))
