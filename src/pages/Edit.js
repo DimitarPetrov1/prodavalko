@@ -2,13 +2,24 @@ import { useState } from "react";
 import { db } from "../firebase/config";
 import { doc, updateDoc } from "firebase/firestore";
 import { useParams } from "react-router-dom";
+import { auth } from "../firebase/config";
+
+import { useNavigate } from "react-router-dom";
+
+import ImageIcon from "../img/image.svg";
 
 import "../css/create.css";
 
-export default function Create() {
+export default function Edit() {
+  const navigate = useNavigate();
+
   const [selectedImage, setSelectedImage] = useState("No image selected");
 
   const { offerID } = useParams();
+
+  const [imageUplaodRef, setImageUploadRef] = useState(null);
+
+  const [imageUrl, setImageUrl] = useState(null);
 
   // to use auto id use doc
   const editOffer = async (e) => {
@@ -24,7 +35,7 @@ export default function Create() {
   };
 
   return (
-    <div className="create">
+    <div className="page create">
       <form method="POST" onSubmit={(e) => e.preventDefault()}>
         <label>Edit Offer name</label>
         <input type="text" name="name" placeholder="Offer name" />

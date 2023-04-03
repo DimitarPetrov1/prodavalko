@@ -3,6 +3,8 @@ import { db } from "../firebase/config";
 import { collection, doc, setDoc } from "firebase/firestore";
 import { auth } from "../firebase/config";
 
+import { useNavigate } from "react-router-dom";
+
 import { storage } from "../firebase/config";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
@@ -12,6 +14,8 @@ import CreateSVG from "../img/undraw_typewriter_re_u9i2.svg";
 import "../css/create.css";
 
 export default function Create() {
+  const navigate = useNavigate();
+
   const [selectedImageName, setSelectedImageName] =
     useState("No image selected");
 
@@ -57,6 +61,7 @@ export default function Create() {
     await setDoc(docRef, formData);
 
     alert("Offer created");
+    navigate(`/catalog/${offerID}`);
   };
 
   return (

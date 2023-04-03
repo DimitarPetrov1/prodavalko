@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { db } from "../firebase/config";
 import { doc, setDoc } from "firebase/firestore";
@@ -9,6 +9,8 @@ import VisibleIcon from "../img/eye.svg";
 import "../css/auth.css";
 
 export default function Register() {
+  const navigate = useNavigate();
+
   const [hiddenPassword, setHiddenPassword] = useState(true);
 
   const Submit = (e) => {
@@ -27,6 +29,7 @@ export default function Register() {
           avatar: "",
         });
       })
+      .then(navigate("/"))
       .catch((error) => {
         const errorMessage = error.message;
         alert(errorMessage);

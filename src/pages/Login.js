@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import SignInSVG from "../img/undraw_secure_login_pdn4.svg";
 import HiddenIcon from "../img/eye-off.svg";
 import VisibleIcon from "../img/eye.svg";
 
 const Login = () => {
+  const navigate = useNavigate();
+
   const [hiddenPassword, setHiddenPassword] = useState(true);
 
   const Submit = (e) => {
@@ -16,7 +18,9 @@ const Login = () => {
       auth,
       e.target.email.value,
       e.target.password.value
-    );
+    )
+      .then(navigate("/"))
+      .catch((err) => alert(err));
   };
 
   return (
