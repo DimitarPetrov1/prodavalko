@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
 import { db, auth, storage } from "../firebase/config";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
@@ -15,6 +16,8 @@ import "../css/profile.css";
 import "../css/partials/uploadimage.css";
 
 export default function Profile() {
+  const { userID } = useParams();
+
   const [userData, setUserData] = useState();
   const [editOpen, setOpenEdit] = useState(false);
   const [newPhone, setNewPhone] = useState();
@@ -25,18 +28,18 @@ export default function Profile() {
   const [imageUplaod, setImageUpload] = useState(null);
 
   useEffect(() => {
-    const avatarRef = ref(storage, `avatars/${auth.currentUser.uid}`);
+    const avatarRef = ref(storage, `avatars/${userID}`);
     if (avatarRef !== null || avatarRef !== undefined) {
       getDownloadURL(avatarRef).then((url) => {
         setAvatarUrl(url);
       });
     }
-  }, []);
+  }, [userID]);
 
   const uploadImage = () => {
     if (imageUplaod == null) return;
 
-    const imageRef = ref(storage, `avatars/${auth.currentUser.uid}`);
+    const imageRef = ref(storage, `avatars/${userID}`);
     uploadBytes(imageRef, imageUplaod).then(() => {
       alert("image uploaded");
     });
@@ -44,7 +47,7 @@ export default function Profile() {
   };
 
   const getUser = async () => {
-    const userRef = doc(db, "userData", auth.currentUser.uid);
+    const userRef = doc(db, "userData", userID);
     const userSnap = await getDoc(userRef);
 
     if (userSnap.exists()) {
@@ -59,7 +62,7 @@ export default function Profile() {
     e.preventDefault();
 
     const updateNumber = async () => {
-      const numberRef = doc(db, "userData", auth.currentUser.uid);
+      const numberRef = doc(db, "userData", userID);
       await updateDoc(numberRef, {
         phoneNumber: newPhone,
       });
@@ -82,9 +85,11 @@ export default function Profile() {
               alt=""
               className="avatar-pic"
             />
-            <label style={{ marginBottom: 10 }} htmlFor="uploadImage">
-              <img src={EditSVG} alt="" className="svg-button" />
-            </label>
+            {auth.currentUser && auth.currentUser.uid === userID ? (
+              <label style={{ marginBottom: 10 }} htmlFor="uploadImage">
+                <img src={EditSVG} alt="" className="svg-button" />
+              </label>
+            ) : null}
 
             <h3>{userData.username}</h3>
 
@@ -112,15 +117,17 @@ export default function Profile() {
             <div className="phone-holder">
               <p>Contact number: {userData.phoneNumber}</p>
 
-              <img
-                src={EditSVG}
-                alt=""
-                className="svg-button"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setOpenEdit(!editOpen);
-                }}
-              />
+              {auth.currentUser && auth.currentUser.uid === userID ? (
+                <img
+                  src={EditSVG}
+                  alt=""
+                  className="svg-button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setOpenEdit(!editOpen);
+                  }}
+                />
+              ) : null}
             </div>
 
             <div className={editOpen ? "edit-phone-visible" : "edit-phone"}>
@@ -138,13 +145,16 @@ export default function Profile() {
               />
             </div>
           </form>
-          {/*  */}
-          <p>Likes:</p>
-          <div className="my-likes-container">
-            <Favourite />
-            <Favourite />
-            <Favourite />
-          </div>
+          {auth.currentUser && auth.currentUser.uid === userID ? (
+            <>
+              <p>Likes:</p>
+              <div className="my-likes-container">
+                <Favourite />
+                <Favourite />
+                <Favourite />
+              </div>
+            </>
+          ) : null}
         </>
       ) : null}
     </div>

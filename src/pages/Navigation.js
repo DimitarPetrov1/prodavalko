@@ -1,7 +1,7 @@
 import { NavLink } from "react-router-dom";
 import "../css/navigation.css";
 
-export default function Navigation({ user }) {
+export default function Navigation({ loggedUser }) {
   return (
     <nav>
       <ul className="nav">
@@ -11,7 +11,7 @@ export default function Navigation({ user }) {
         <li>
           <NavLink to="/catalog">catalog</NavLink>
         </li>
-        {user ? (
+        {loggedUser ? (
           <>
             <li>
               <NavLink to="/create">create</NavLink>
@@ -20,7 +20,7 @@ export default function Navigation({ user }) {
               <NavLink to="/logout">logout</NavLink>
             </li>
             <li>
-              <NavLink to="/profile">profile</NavLink>
+              <NavLink to={`/profile/${loggedUser.uid}`}>profile</NavLink>
             </li>
           </>
         ) : (

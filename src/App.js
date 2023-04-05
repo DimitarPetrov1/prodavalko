@@ -7,6 +7,7 @@ import Details from "./pages/Details";
 import Create from "./pages/Create";
 import Edit from "./pages/Edit";
 import Logout from "./pages/Logout";
+import NotFound from "./pages/NotFound";
 
 import "./css/app.css";
 import Register from "./pages/Register";
@@ -31,7 +32,7 @@ function App() {
   return (
     <div className="app">
       <header>
-        <Navigation user={user} />
+        <Navigation loggedUser={user} />
       </header>
       <main>
         <Routes>
@@ -42,8 +43,9 @@ function App() {
           <Route path="/edit/:offerID" element={<Edit />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/profile" element={<Profile user={user} />} />
+          <Route path="/profile/:userID" element={<Profile />} />
           <Route path="/logout" element={<Logout />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
       <footer>Just a footer</footer>
