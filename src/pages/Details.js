@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { db } from "../firebase/config";
-import { doc, getDoc, deleteDoc } from "firebase/firestore";
+import { doc, getDoc, deleteDoc, updateDoc } from "firebase/firestore";
 import { useParams, NavLink } from "react-router-dom";
 import { auth } from "../firebase/config";
 
@@ -47,6 +47,25 @@ export default function Details() {
     await deleteDoc(doc(db, "offers", offerID));
   };
 
+  const onLike = async () => {
+    let userLikesList = [];
+    const userRef = doc(db, "userData", auth.currentUser.uid);
+    const likesSnap = (await getDoc(userRef)).data().likes;
+
+    if (!likesSnap.includes(offerID)) {
+      userLikesList.push(...likesSnap, offerID);
+    } else {
+      let likesCopy = likesSnap;
+      const index = likesCopy.indexOf(offerID);
+      likesCopy.splice(index, 1);
+
+      userLikesList = likesCopy;
+    }
+    await updateDoc(userRef, {
+      likes: userLikesList,
+    });
+  };
+
   return (
     <div className="details">
       {offer && offerDetails ? (
@@ -61,7 +80,12 @@ export default function Details() {
               <p>{offer.name}</p>
               {auth.currentUser &&
               auth.currentUser.uid === offer.owner ? null : (
-                <img className="svg-button" src={HeartSVG} alt="" />
+                <img
+                  className="svg-button"
+                  src={HeartSVG}
+                  alt=""
+                  onClick={onLike}
+                />
               )}
             </div>
             <p className="sidebar-price">Price: {offer.price}$</p>
