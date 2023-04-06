@@ -22,6 +22,7 @@ export default function Profile() {
   const [editOpen, setOpenEdit] = useState(false);
   const [newPhone, setNewPhone] = useState();
   const [avatarUrl, setAvatarUrl] = useState("");
+  const [favourites, setFavourites] = useState(null);
 
   const [selectedImage, setSelectedImage] = useState(null);
 
@@ -29,11 +30,22 @@ export default function Profile() {
 
   useEffect(() => {
     const avatarRef = ref(storage, `avatars/${userID}`);
+    const likesRef = doc(db, "userData", userID);
+
     if (avatarRef !== null || avatarRef !== undefined) {
-      getDownloadURL(avatarRef).then((url) => {
-        setAvatarUrl(url);
-      });
+      getDownloadURL(avatarRef)
+        .then((url) => {
+          setAvatarUrl(url);
+        })
+        .catch((err) => console.log(err.message));
     }
+
+    const getLikes = async () => {
+      const likes = await getDoc(likesRef);
+      setFavourites(likes.data().likes);
+    };
+
+    getLikes();
   }, [userID]);
 
   const uploadImage = () => {
@@ -147,11 +159,13 @@ export default function Profile() {
           </form>
           {auth.currentUser && auth.currentUser.uid === userID ? (
             <>
-              <p>Likes:</p>
+              <p>Your favourites:</p>
               <div className="my-likes-container">
-                <Favourite />
-                <Favourite />
-                <Favourite />
+                {favourites
+                  ? favourites.map((id, index) => {
+                      return <Favourite id={id} key={index} />;
+                    })
+                  : null}
               </div>
             </>
           ) : null}

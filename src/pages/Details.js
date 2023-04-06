@@ -5,12 +5,14 @@ import { useParams, NavLink } from "react-router-dom";
 import { auth } from "../firebase/config";
 
 import HeartSVG from "../img/heart.svg";
+import BlackHeartSVG from "../img/heart-black.svg";
 import DeleteSVG from "../img/trash-2.svg";
 import EditSVG from "../img/edit.svg";
 
 import "../css/details.css";
 
 export default function Details() {
+  const [offerLiked, setOfferLiked] = useState(false);
   const [offer, setOffer] = useState();
   const [offerDetails, setOfferDetails] = useState();
 
@@ -18,6 +20,16 @@ export default function Details() {
   const { offerID } = useParams();
 
   useEffect(() => {
+    const getIsLiked = async () => {
+      const userRef = doc(db, "userData", auth.currentUser.uid);
+      const likesSnap = await getDoc(userRef);
+
+      if (likesSnap.data().likes.includes(offerID)) {
+        setOfferLiked(true);
+      }
+    };
+
+    // todo user context
     const getOffer = async () => {
       const currentOffer = doc(db, "offers", offerID);
       const offerSnap = await getDoc(currentOffer);
@@ -40,6 +52,7 @@ export default function Details() {
         console.log("No such document");
       }
     };
+    getIsLiked();
     getOffer();
   }, [offerID]);
 
@@ -50,12 +63,12 @@ export default function Details() {
   const onLike = async () => {
     let userLikesList = [];
     const userRef = doc(db, "userData", auth.currentUser.uid);
-    const likesSnap = (await getDoc(userRef)).data().likes;
+    const likesSnap = await getDoc(userRef);
 
-    if (!likesSnap.includes(offerID)) {
-      userLikesList.push(...likesSnap, offerID);
+    if (!likesSnap.data().likes.includes(offerID)) {
+      userLikesList.push(...likesSnap.data().likes, offerID);
     } else {
-      let likesCopy = likesSnap;
+      let likesCopy = likesSnap.data().likes;
       const index = likesCopy.indexOf(offerID);
       likesCopy.splice(index, 1);
 
@@ -64,6 +77,7 @@ export default function Details() {
     await updateDoc(userRef, {
       likes: userLikesList,
     });
+    setOfferLiked(!offerLiked);
   };
 
   return (
@@ -82,7 +96,7 @@ export default function Details() {
               auth.currentUser.uid === offer.owner ? null : (
                 <img
                   className="svg-button"
-                  src={HeartSVG}
+                  src={offerLiked ? BlackHeartSVG : HeartSVG}
                   alt=""
                   onClick={onLike}
                 />
