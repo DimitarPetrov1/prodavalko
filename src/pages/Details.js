@@ -123,10 +123,14 @@ export default function Details() {
             </div>
             <p className="sidebar-price">Price: {offer.price}$</p>
 
-            <p>Offer by: {offerDetails.username}</p>
+            <p>
+              Offer by:{" "}
+              <NavLink className="text-link" to={`/profile/${offer.owner}`}>
+                {offerDetails.username}
+              </NavLink>
+            </p>
             <p>Contact number: {offerDetails.phoneNumber}</p>
 
-            {/* todo */}
             {user && user.uid === offer.owner ? (
               <div className="sidebar-controls">
                 <img

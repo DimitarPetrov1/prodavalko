@@ -67,8 +67,7 @@ export default function Create() {
       return;
     }
     // Price must be numbers only && > 0
-    let numbers = /^[-+]?[0-9]+(\.[0-9]+)*$/;
-    if (!form.price.value.match(numbers)) {
+    if (!form.price.value.match(/^[-+]?[0-9]+(\.[0-9]+)*$/g)) {
       setAlertMessage("Price must be a number!");
       setAlert(true);
       return;

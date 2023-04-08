@@ -17,6 +17,13 @@ const Login = () => {
   const Submit = (e) => {
     e.preventDefault();
 
+    // Check if all inputs are entered
+    if (!e.target.email.value || !e.target.password.value) {
+      setAlertMessage("All fields are required!");
+      setAlert(true);
+      return;
+    }
+
     const auth = getAuth();
     signInWithEmailAndPassword(
       auth,

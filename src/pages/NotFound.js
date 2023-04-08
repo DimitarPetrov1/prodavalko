@@ -8,7 +8,7 @@ export default function NotFound() {
       <h2>We can't find that page!</h2>
       <br />
       <NavLink className="text-link" to="/">
-        <p>Visit our home page. </p>
+        <p>Visit our home page.</p>
       </NavLink>
     </div>
   );

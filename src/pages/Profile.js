@@ -110,7 +110,7 @@ export default function Profile() {
       {userData ? (
         <>
           <div className="profile-picture-container">
-            {/* If not image set, use default */}
+            {/* If no image set, use default */}
             <img
               src={avatarUrl ? avatarUrl : defaultImage}
               alt=""
@@ -137,7 +137,12 @@ export default function Profile() {
 
               {imageUplaod ? (
                 <>
-                  <button onClick={uploadImage}>Add photo</button>
+                  <img
+                    className="svg-button"
+                    src={CheckSVG}
+                    alt=""
+                    onClick={uploadImage}
+                  />
                   {selectedImage}
                 </>
               ) : null}

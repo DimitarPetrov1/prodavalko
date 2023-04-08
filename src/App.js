@@ -51,7 +51,6 @@ function App() {
               <Route path="*" element={<NotFound />} />
             </Routes>
           </main>
-          {/* <footer>Just a footer</footer> */}
         </UserContext.Provider>
       )}
     </div>

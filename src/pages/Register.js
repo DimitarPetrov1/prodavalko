@@ -21,6 +21,30 @@ export default function Register() {
   const Submit = (e) => {
     e.preventDefault();
 
+    // Check if all inputs are entered
+    if (
+      !e.target.username.value ||
+      !e.target.email.value ||
+      !e.target.phoneNumber.value ||
+      !e.target.password.value ||
+      !e.target.repeatPassword.value
+    ) {
+      setAlertMessage("All fields are required!");
+      setAlert(true);
+      return;
+    }
+
+    if (e.target.phoneNumber.value.match(/[^0-9.]/g)) {
+      setAlertMessage("Please input your phone number");
+      setAlert(true);
+      return;
+    }
+    if (e.target.phoneNumber.value !== e.target.repeatPassword.value) {
+      setAlertMessage("Passwords don't match");
+      setAlert(true);
+      return;
+    }
+
     const auth = getAuth();
     createUserWithEmailAndPassword(
       auth,
@@ -42,11 +66,8 @@ export default function Register() {
       .catch((err) => {
         let message;
 
-        if (err.message.includes("auth/user-not-found")) {
-          message = "Wrong email or password!";
-        }
-        if (err.message.includes("auth/wrong-password")) {
-          message = "Wrong password!";
+        if (err.message.includes("auth/email-already-in-use")) {
+          message = "Email already registered!";
         } else {
           message = err.message;
         }
@@ -65,11 +86,7 @@ export default function Register() {
       <form method="POST" onSubmit={Submit}>
         <input type="text" name="username" placeholder="Username" />
         <input type="email" name="email" placeholder="Your Email" />
-        <input
-          type="number"
-          name="phoneNumber"
-          placeholder="Your phone number"
-        />
+        <input type="text" name="phoneNumber" placeholder="Your phone number" />
         <div className="icon-holder">
           <input
             type={hiddenPassword ? "password" : "text"}
