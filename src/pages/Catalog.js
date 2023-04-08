@@ -9,6 +9,7 @@ import CatalogItemBox from "./CatalogItemBox";
 
 export default function Catalog() {
   const [offers, setOffers] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const getOffers = async () => {
@@ -21,23 +22,29 @@ export default function Catalog() {
       );
     };
     getOffers();
+    setLoading(false);
   }, []);
 
   return (
     <div className="catalog">
+      <h1 className="page-header">Our catalog</h1>
       <div className="catalog-items">
-        {offers.length === 0 ? (
-          <p>No items available</p>
-        ) : (
-          offers.map((offer, index) => {
-            return (
-              <CatalogItemBox
-                key={index}
-                id={offer.id}
-                details={offer.details}
-              />
-            );
-          })
+        {loading ? null : (
+          <>
+            {offers.length === 0 ? (
+              <p>No items available</p>
+            ) : (
+              offers.map((offer, index) => {
+                return (
+                  <CatalogItemBox
+                    key={index}
+                    id={offer.id}
+                    details={offer.details}
+                  />
+                );
+              })
+            )}
+          </>
         )}
       </div>
     </div>

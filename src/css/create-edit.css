@@ -24,7 +24,7 @@ input[type="file"] {
 }
 
 .create textarea[name="description"] {
-  height: 200px;
+  height: 300px;
   width: 100%;
   padding: 10px;
   resize: none;
@@ -62,4 +62,10 @@ input[type="file"] {
 
 .select-text-wrap:hover {
   cursor: pointer;
+}
+
+/* Edit page */
+
+.edit label {
+  margin-bottom: 10px !important;
 }

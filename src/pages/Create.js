@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { UserContext } from "../context/userContext";
 import { db } from "../firebase/config";
 import { collection, doc, setDoc } from "firebase/firestore";
-import { auth } from "../firebase/config";
+import Alert from "../pages/partials/Alert";
 
 import { useNavigate } from "react-router-dom";
 
@@ -11,10 +12,14 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import ImageIcon from "../img/image.svg";
 import CreateSVG from "../img/undraw_typewriter_re_u9i2.svg";
 
-import "../css/create.css";
+import "../css/create-edit.css";
 
 export default function Create() {
   const navigate = useNavigate();
+  const user = useContext(UserContext);
+
+  const [alert, setAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
 
   const [selectedImageName, setSelectedImageName] =
     useState("No image selected");
@@ -49,9 +54,45 @@ export default function Create() {
     //  get the form data and update the state
     const form = e.target.form;
 
+    // Input validation
+    // All fiends are reqired
+    if (
+      !form.name.value ||
+      !form.price.value ||
+      !form.description.value ||
+      !form.image.value
+    ) {
+      setAlertMessage("All fields are required!");
+      setAlert(true);
+      return;
+    }
+    // Price must be numbers only && > 0
+    let numbers = /^[-+]?[0-9]+(\.[0-9]+)*$/;
+    if (!form.price.value.match(numbers)) {
+      setAlertMessage("Price must be a number!");
+      setAlert(true);
+      return;
+    }
+    if (Number(form.price.value) <= 0) {
+      setAlertMessage("Price must be more than 0");
+      setAlert(true);
+      return;
+    }
+    // Name and description must be longer than...
+    if (form.name.value.length < 3) {
+      setAlertMessage("The name must be longer than 3 characters");
+      setAlert(true);
+      return;
+    }
+    if (form.description.value.length < 10) {
+      setAlertMessage("The description must be longer than 10 characters");
+      setAlert(true);
+      return;
+    }
+
     formData = {
       id: offerID,
-      owner: auth.currentUser.uid.toString(),
+      owner: user.uid,
       image: imageUrl,
       name: form.name.value,
       price: form.price.value,
@@ -60,13 +101,15 @@ export default function Create() {
 
     await setDoc(docRef, formData);
 
-    alert("Offer created");
     navigate(`/catalog/${offerID}`);
   };
 
   return (
     <div className="page create">
-      <h1>Create offer</h1>
+      {alert ? (
+        <Alert message={alertMessage} onClose={() => setAlert(false)} />
+      ) : null}
+      <h1 className="page-header">Create offer</h1>
       <form method="POST" onSubmit={(e) => e.preventDefault()}>
         <input type="text" name="name" placeholder="Offer name" />
         <input type="text" name="price" placeholder="Offer price" />
@@ -96,13 +139,9 @@ export default function Create() {
                 <button className="button normal" onClick={uploadImage}>
                   Confirm
                 </button>
-              ) : (
-                ""
-              )}
+              ) : null}
             </>
-          ) : (
-            ""
-          )}
+          ) : null}
         </div>
 
         <button

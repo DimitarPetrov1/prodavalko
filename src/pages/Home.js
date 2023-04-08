@@ -1,19 +1,31 @@
-import { auth } from "../firebase/config";
-import Login from "./Login";
-import WelcomeIcon from "../img/undraw_welcome_re_h3d9.svg";
+import { useContext } from "react";
+import { UserContext } from "../context/userContext";
 
 import "../css/home.css";
+import { NavLink } from "react-router-dom";
 
 export default function Home() {
-  return (
-    <div className="home">
-      {auth.currentUser && auth.currentUser.uid ? (
-        <img src={WelcomeIcon} alt=""></img>
-      ) : (
-        <Login />
-      )}
+  const user = useContext(UserContext);
 
-      <p></p>
+  return (
+    <div className="page home">
+      <h1 className="page-header">Welcome to Prodavalko</h1>
+      <h3 style={{ marginBottom: 10 }}>The best place to sell or buy stuff!</h3>
+
+      {user ? (
+        <p>Hello again</p>
+      ) : (
+        <p>
+          <NavLink className="text-link" to="/login">
+            Login
+          </NavLink>
+          {" or "}
+          <NavLink className="text-link" to="/register">
+            Register
+          </NavLink>
+          {" to get full access!"}
+        </p>
+      )}
     </div>
   );
 }

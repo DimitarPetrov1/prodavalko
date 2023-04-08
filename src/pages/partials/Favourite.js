@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { db } from "../firebase/config";
+import { db } from "../../firebase/config";
 import { doc, getDoc } from "firebase/firestore";
 import { NavLink } from "react-router-dom";
-import "../css/partials/favourite.css";
+import "../../css/partials/favourite.css";
 
 export default function Favourite({ id }) {
   const [offer, setOffer] = useState();

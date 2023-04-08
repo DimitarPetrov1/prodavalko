@@ -6,10 +6,15 @@ import { doc, setDoc } from "firebase/firestore";
 import SignUpSVG from "../img/undraw_sign__up_nm4k.svg";
 import HiddenIcon from "../img/eye-off.svg";
 import VisibleIcon from "../img/eye.svg";
+import Alert from "../pages/partials/Alert";
+
 import "../css/auth.css";
 
 export default function Register() {
   const navigate = useNavigate();
+
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alert, setAlert] = useState(false);
 
   const [hiddenPassword, setHiddenPassword] = useState(true);
 
@@ -29,16 +34,34 @@ export default function Register() {
           likes: [],
         });
       })
-      .then(navigate("/"))
-      .catch((error) => {
-        const errorMessage = error.message;
-        alert(errorMessage);
+      .then(() => {
+        if (auth) {
+          navigate("/");
+        }
+      })
+      .catch((err) => {
+        let message;
+
+        if (err.message.includes("auth/user-not-found")) {
+          message = "Wrong email or password!";
+        }
+        if (err.message.includes("auth/wrong-password")) {
+          message = "Wrong password!";
+        } else {
+          message = err.message;
+        }
+
+        setAlertMessage(message);
+        setAlert(true);
       });
   };
 
   return (
     <div className="page auth-page">
-      <h1>Sign up</h1>
+      {alert ? (
+        <Alert message={alertMessage} onClose={() => setAlert(false)} />
+      ) : null}
+      <h1 className="page-header">Sign up</h1>
       <form method="POST" onSubmit={Submit}>
         <input type="text" name="username" placeholder="Username" />
         <input type="email" name="email" placeholder="Your Email" />
@@ -89,10 +112,18 @@ export default function Register() {
         <img src={SignUpSVG} alt="" />
       </form>
       <p>
-        Already have an account? <Link to="/login">Sign in</Link>.
+        Already have an account?{" "}
+        <Link className="text-link" to="/login">
+          Sign in
+        </Link>
+        .
       </p>
       <p>
-        Or just browse our offers <Link to="/catalog">here</Link>.
+        Or just browse our offers{" "}
+        <Link className="text-link" to="/catalog">
+          here
+        </Link>
+        .
       </p>
     </div>
   );

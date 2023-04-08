@@ -7,7 +7,6 @@
 .catalog-item-box img {
   width: 300px;
   height: 200px;
-  object-fit: cover;
   overflow: hidden;
 }
 
@@ -15,7 +14,7 @@
   height: 200px;
   border: 1px solid lightgray;
   border-left: 0;
-  width: 100%;
+  width: 500px;
 }
 
 .catalog-item-description-box p {

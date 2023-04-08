@@ -4,9 +4,13 @@ import { Link, useNavigate } from "react-router-dom";
 import SignInSVG from "../img/undraw_secure_login_pdn4.svg";
 import HiddenIcon from "../img/eye-off.svg";
 import VisibleIcon from "../img/eye.svg";
+import Alert from "../pages/partials/Alert";
 
 const Login = () => {
   const navigate = useNavigate();
+
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alert, setAlert] = useState(false);
 
   const [hiddenPassword, setHiddenPassword] = useState(true);
 
@@ -19,13 +23,34 @@ const Login = () => {
       e.target.email.value,
       e.target.password.value
     )
-      .then(navigate("/"))
-      .catch((err) => alert(err));
+      .then(() => {
+        if (auth) {
+          navigate("/");
+        }
+      })
+      .catch((err) => {
+        let message;
+
+        if (err.message.includes("auth/user-not-found")) {
+          message = "Wrong email or password!";
+        }
+        if (err.message.includes("auth/wrong-password")) {
+          message = "Wrong password!";
+        } else {
+          message = err.message;
+        }
+
+        setAlertMessage(message);
+        setAlert(true);
+      });
   };
 
   return (
     <div className="page auth-page">
-      <h1>Sign in</h1>
+      {alert ? (
+        <Alert message={alertMessage} onClose={() => setAlert(false)} />
+      ) : null}
+      <h1 className="page-header">Sign in</h1>
       <form method="POST" onSubmit={Submit}>
         <input type="email" name="email" placeholder="Your email" />
         <div className="icon-holder">
@@ -62,10 +87,18 @@ const Login = () => {
         <img src={SignInSVG} alt="" />
       </form>
       <p>
-        Don't have an account? <Link to="/register">Sign up</Link>.
+        Don't have an account?{" "}
+        <Link className="text-link" to="/register">
+          Sign up
+        </Link>
+        .
       </p>
       <p>
-        Or just browse our offers <Link to="/catalog">here</Link>.
+        Or just browse our offers{" "}
+        <Link className="text-link" to="/catalog">
+          here
+        </Link>
+        .
       </p>
     </div>
   );

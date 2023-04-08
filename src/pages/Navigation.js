@@ -1,7 +1,18 @@
 import { NavLink } from "react-router-dom";
+import { getAuth, signOut } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 import "../css/navigation.css";
 
 export default function Navigation({ loggedUser }) {
+  const navigate = useNavigate();
+
+  const onLogout = () => {
+    const user = getAuth();
+    signOut(user)
+      .then(() => navigate("/"))
+      .catch((err) => console.log(err));
+  };
+
   return (
     <nav>
       <ul className="nav">
@@ -17,7 +28,7 @@ export default function Navigation({ loggedUser }) {
               <NavLink to="/create">create</NavLink>
             </li>
             <li>
-              <NavLink to="/logout">logout</NavLink>
+              <NavLink onClick={onLogout}>logout</NavLink>
             </li>
             <li>
               <NavLink to={`/profile/${loggedUser.uid}`}>profile</NavLink>

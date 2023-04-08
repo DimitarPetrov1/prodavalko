@@ -1,6 +1,5 @@
 .auth-page h1 {
   text-align: center;
-  padding: 25px;
 }
 
 .auth-page form[method="POST"] {

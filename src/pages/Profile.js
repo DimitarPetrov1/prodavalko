@@ -1,11 +1,12 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useEffect, useState, useContext } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { UserContext } from "../context/userContext";
 
-import { db, auth, storage } from "../firebase/config";
+import { db, storage } from "../firebase/config";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 
 import defaultImage from "../img/profile.jpg";
-import Favourite from "../partials/Favourite";
+import Favourite from "./partials/Favourite";
 
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
@@ -18,6 +19,10 @@ import "../css/partials/uploadimage.css";
 export default function Profile() {
   const { userID } = useParams();
 
+  const user = useContext(UserContext);
+
+  const navigate = useNavigate();
+
   const [userData, setUserData] = useState();
   const [editOpen, setOpenEdit] = useState(false);
   const [newPhone, setNewPhone] = useState();
@@ -28,47 +33,62 @@ export default function Profile() {
 
   const [imageUplaod, setImageUpload] = useState(null);
 
+  const userRef = doc(db, "userData", userID);
+
+  useEffect(() => {
+    const getUser = async () => {
+      const userSnap = await getDoc(userRef);
+
+      if (userSnap.exists()) {
+        setUserData(userSnap.data());
+      }
+    };
+    getUser();
+  }, [userRef]);
+
   useEffect(() => {
     const avatarRef = ref(storage, `avatars/${userID}`);
-    const likesRef = doc(db, "userData", userID);
 
-    if (avatarRef !== null || avatarRef !== undefined) {
-      getDownloadURL(avatarRef)
-        .then((url) => {
-          setAvatarUrl(url);
-        })
-        .catch((err) => console.log(err.message));
+    if (avatarRef !== false) {
+      const getAvatar = async () => {
+        getDownloadURL(avatarRef)
+          .then((url) => {
+            setAvatarUrl(url);
+          })
+          .catch((err) => console.log(err.code));
+      };
+      getAvatar();
     }
+  }, [userID, navigate]);
 
+  useEffect(() => {
+    const likesRef = doc(db, "userData", userID);
     const getLikes = async () => {
-      const likes = await getDoc(likesRef);
-      setFavourites(likes.data().likes);
+      try {
+        const likes = await getDoc(likesRef);
+        setFavourites(likes.data().likes);
+      } catch (err) {
+        console.log(err);
+        navigate("*");
+      }
     };
-
     getLikes();
-  }, [userID]);
+  }, [navigate, userID]);
 
   const uploadImage = () => {
-    if (imageUplaod == null) return;
+    const avatarRef = ref(storage, `avatars/${userID}`);
 
-    const imageRef = ref(storage, `avatars/${userID}`);
-    uploadBytes(imageRef, imageUplaod).then(() => {
-      alert("image uploaded");
-    });
+    uploadBytes(avatarRef, imageUplaod)
+      .then(() =>
+        getDownloadURL(avatarRef)
+          .then((url) => {
+            setAvatarUrl(url);
+          })
+          .catch((err) => console.log(err.message))
+      )
+      .catch((err) => console.log(err.message));
     setImageUpload(null);
   };
-
-  const getUser = async () => {
-    const userRef = doc(db, "userData", userID);
-    const userSnap = await getDoc(userRef);
-
-    if (userSnap.exists()) {
-      setUserData(userSnap.data());
-    } else {
-      console.log("No such document!");
-    }
-  };
-  getUser();
 
   const editNumber = (e) => {
     e.preventDefault();
@@ -82,12 +102,11 @@ export default function Profile() {
     updateNumber();
     setOpenEdit(false);
     setNewPhone();
-    getUser();
   };
 
   return (
     <div className="profile">
-      <h1>User Profile</h1>
+      <h1 className="page-header">User Profile</h1>
       {userData ? (
         <>
           <div className="profile-picture-container">
@@ -97,7 +116,7 @@ export default function Profile() {
               alt=""
               className="avatar-pic"
             />
-            {auth.currentUser && auth.currentUser.uid === userID ? (
+            {user && user.uid === userID ? (
               <label style={{ marginBottom: 10 }} htmlFor="uploadImage">
                 <img src={EditSVG} alt="" className="svg-button" />
               </label>
@@ -129,7 +148,7 @@ export default function Profile() {
             <div className="phone-holder">
               <p>Contact number: {userData.phoneNumber}</p>
 
-              {auth.currentUser && auth.currentUser.uid === userID ? (
+              {user && user.uid === userID ? (
                 <img
                   src={EditSVG}
                   alt=""
@@ -146,7 +165,6 @@ export default function Profile() {
               <input
                 type="number"
                 name="editNumber"
-                value={newPhone}
                 onChange={(e) => setNewPhone(e.target.value)}
               />
               <img
@@ -157,15 +175,13 @@ export default function Profile() {
               />
             </div>
           </form>
-          {auth.currentUser && auth.currentUser.uid === userID ? (
+          {user && user.uid === userID && favourites.length > 0 ? (
             <>
               <p>Your favourites:</p>
               <div className="my-likes-container">
-                {favourites
-                  ? favourites.map((id, index) => {
-                      return <Favourite id={id} key={index} />;
-                    })
-                  : null}
+                {favourites.map((id, index) => {
+                  return <Favourite id={id} key={index} />;
+                })}
               </div>
             </>
           ) : null}
