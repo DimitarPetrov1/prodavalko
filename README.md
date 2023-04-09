@@ -1,4 +1,4 @@
-# Prodavalko website
+# Prodavalko website - Hosted/Database/Authentication in Firebase
 
 ## Authentication
 

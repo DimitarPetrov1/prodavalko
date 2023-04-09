@@ -2,7 +2,6 @@
 
 # dependencies
 /node_modules
-/firebase
 /.pnp
 .pnp.js
 
@@ -13,6 +12,7 @@
 /build
 
 # misc
+/firebase
 .DS_Store
 .env.local
 .env.development.local
