@@ -4,7 +4,6 @@ import { db, storage } from "../firebase/config";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useParams } from "react-router-dom";
-
 import { useNavigate } from "react-router-dom";
 
 import ImageIcon from "../img/image.svg";
@@ -23,13 +22,9 @@ export default function Edit() {
     useState("No image selected");
 
   const { offerID } = useParams();
-
   const [offerDetails, setOfferDetails] = useState({});
-
   const [imageUplaodRef, setImageUploadRef] = useState(null);
-
   const [imageUrl, setImageUrl] = useState(null);
-
   const editDocumentRef = doc(db, "offers", offerID);
   const imageRef = ref(storage, `offerImages/${offerID}`);
 

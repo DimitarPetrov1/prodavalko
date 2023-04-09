@@ -1,11 +1,9 @@
 import { useState, useEffect } from "react";
-
 import { db } from "../firebase/config";
-
 import { collection, getDocs } from "firebase/firestore";
+import CatalogItemBox from "./CatalogItemBox";
 
 import "../css/catalog.css";
-import CatalogItemBox from "./CatalogItemBox";
 
 export default function Catalog() {
   const [offers, setOffers] = useState([]);

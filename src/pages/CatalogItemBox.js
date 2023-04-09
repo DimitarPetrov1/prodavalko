@@ -7,7 +7,6 @@ export default function CatalogItemBox({ id, details }) {
       <div className="catalog-item-box">
         <img src={details.image} alt="" />
         <div className="catalog-item-description-box">
-          {/* To fix overflowing with larger texts */}
           <p>{details.name}</p>
           <p className="catalog-item-box-description">
             {details.description.slice(0, 300)}

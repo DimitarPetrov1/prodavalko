@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { UserContext } from "./context/userContext";
 import { Routes, Route } from "react-router-dom";
+import { auth } from "./firebase/config";
+import { onAuthStateChanged } from "firebase/auth";
 import Home from "./pages/Home";
 import Navigation from "./pages/Navigation";
 import Catalog from "./pages/Catalog";
@@ -8,13 +10,12 @@ import Details from "./pages/Details";
 import Create from "./pages/Create";
 import Edit from "./pages/Edit";
 import NotFound from "./pages/NotFound";
-
-import "./css/app.css";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
-import { auth } from "./firebase/config";
-import { onAuthStateChanged } from "firebase/auth";
+
 import Profile from "./pages/Profile";
+
+import "./css/app.css";
 
 function App() {
   const [user, setUser] = useState(null);

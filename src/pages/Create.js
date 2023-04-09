@@ -1,14 +1,12 @@
 import { useState, useContext } from "react";
 import { UserContext } from "../context/userContext";
+import { useNavigate } from "react-router-dom";
 import { db } from "../firebase/config";
 import { collection, doc, setDoc } from "firebase/firestore";
-import Alert from "../pages/partials/Alert";
-
-import { useNavigate } from "react-router-dom";
-
 import { storage } from "../firebase/config";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
+import Alert from "../pages/partials/Alert";
 import ImageIcon from "../img/image.svg";
 import CreateSVG from "../img/undraw_typewriter_re_u9i2.svg";
 
@@ -23,9 +21,7 @@ export default function Create() {
 
   const [selectedImageName, setSelectedImageName] =
     useState("No image selected");
-
   const [imageUplaodRef, setImageUploadRef] = useState(null);
-
   const [imageUrl, setImageUrl] = useState(null);
 
   let formData = {};
@@ -53,7 +49,6 @@ export default function Create() {
   const submit = async (e) => {
     //  get the form data and update the state
     const form = e.target.form;
-
     // Input validation
     // All fiends are reqired
     if (

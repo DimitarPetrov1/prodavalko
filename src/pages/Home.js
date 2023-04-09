@@ -1,8 +1,8 @@
 import { useContext } from "react";
 import { UserContext } from "../context/userContext";
+import { NavLink } from "react-router-dom";
 
 import "../css/home.css";
-import { NavLink } from "react-router-dom";
 
 export default function Home() {
   const user = useContext(UserContext);

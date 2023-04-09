@@ -4,11 +4,10 @@ import { UserContext } from "../context/userContext";
 
 import { db, storage } from "../firebase/config";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 import defaultImage from "../img/profile.jpg";
 import Favourite from "./partials/Favourite";
-
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 import EditSVG from "../img/edit.svg";
 import CheckSVG from "../img/check.svg";
