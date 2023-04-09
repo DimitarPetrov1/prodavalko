@@ -39,7 +39,7 @@ export default function Register() {
       setAlert(true);
       return;
     }
-    if (e.target.phoneNumber.value !== e.target.repeatPassword.value) {
+    if (e.target.password.value !== e.target.repeatPassword.value) {
       setAlertMessage("Passwords don't match");
       setAlert(true);
       return;
