@@ -39,3 +39,4 @@
 ## Other
 
     - Added custom Alert and Confirm dialog boxes
+    - Can turn Passwords visible when Loggin in or Registering
